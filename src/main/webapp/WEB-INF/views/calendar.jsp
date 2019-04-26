@@ -1,0 +1,28 @@
+
+
+<html>
+
+<head>
+    <title>Page Test</title>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+</head>
+
+<body>
+    <div class="form-group-lg input-group">
+        <input type="text" autocomplete="off" name="date" id="date" class="form-control" />
+    </div>
+    <script>
+        $(function() {
+            $('input[name="date"]').daterangepicker({
+                minYear: 2018,
+            });
+        });
+
+    </script>
+
+</body>
+
+</html>
