@@ -13,6 +13,7 @@ public interface BookingService {
     List<Booking> getВookedByDateIn(LocalDate dateIn, LocalDate dateOut);
     List<Booking> getВookedByDateOut(LocalDate dateIn, LocalDate dateOut);
     List<Booking> getВookedByDateInAndDateOut(LocalDate dateIn, LocalDate dateOut);
+    List<Booking> getВookedByDateInAndDateOut2(LocalDate dateIn, LocalDate dateOut);
     List<Booking> getBookedListByUser (User user);
     Booking getBookingByID(Integer id);
 }

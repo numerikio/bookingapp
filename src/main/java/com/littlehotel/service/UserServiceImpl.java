@@ -29,13 +29,18 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public User getUserDyID(Integer id) {
+        return userRepository.getOne(id);
+    }
+
+    @Override
     public List<User> getAllUsers() {
         return userRepository.findAll();
     }
 
     @Override
-    public void deleteUser(User user) {
-        userRepository.delete(user);
+    public void deleteUser(Integer id) {
+        userRepository.deleteById(id);
     }
 
     @Override

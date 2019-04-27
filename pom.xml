@@ -22,6 +22,7 @@
         <hibernate.jpa>1.0.0.Final</hibernate.jpa>
         <maven.compiler.plugin>3.8.0</maven.compiler.plugin>
         <maven.war.plugin>3.2.2</maven.war.plugin>
+        <junit.version>4.11</junit.version>
     </properties>
 
     <dependencies>
@@ -101,6 +102,15 @@
             <version>${h2.connector.version}</version>
             <scope>runtime</scope>
         </dependency>
+
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+
 
     </dependencies>
 

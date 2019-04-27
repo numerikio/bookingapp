@@ -48,16 +48,11 @@ public class AppController {
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public String mainPage(ModelMap model) {
 
-        Set<String> categories = new HashSet<>();
-        for (Room room : roomService.getAllRooms()
-        ) {
-            categories.add(room.getCategory());
-        }
-        categories.add("All");
-
         model.addAttribute("rooms", roomService.getAllRooms());
         model.addAttribute("loggedinuser", userHandler.getPrincipal());
-        model.addAttribute("categories", categories);
+        model.addAttribute("categories", categories());
+        model.addAttribute("found", false);
+        model.addAttribute("coint", bookingService.getBookedListByUser(userService.getUserByName(userHandler.getPrincipal())).size());
         return "mainPage";
     }
 
@@ -66,18 +61,13 @@ public class AppController {
                            @RequestParam("date") String date,
                            ModelMap model) {
 
-        Set<String> categories = new HashSet<>();
-        for (Room room : roomService.getAllRooms()
-        ) {
-            categories.add(room.getCategory());
-        }
-        categories.add("All");
-
         model.addAttribute("dateString", date);
         model.addAttribute("days", localDateHandler.getDaysOfPeriodByString(date));
         model.addAttribute("loggedinuser", userHandler.getPrincipal());
         model.addAttribute("rooms", getRoomSet(getBookedRoomByPeriod(date), getFindRooms(category)));
-        model.addAttribute("categories", categories);
+        model.addAttribute("categories", categories());
+        model.addAttribute("found", true);
+        model.addAttribute("coint", bookingService.getBookedListByUser(userService.getUserByName(userHandler.getPrincipal())).size());
         return "mainPage";
     }
 
@@ -117,7 +107,6 @@ public class AppController {
         Booking booking = bookingService.getBookingByID(Integer.valueOf(bookedID));
         booking.setGuestServiceList(services);
         bookingService.saveBooking(booking);
-
         return "redirect:bookingPage";
     }
 
@@ -137,7 +126,6 @@ public class AppController {
 
         List<LocalDate> localDates = localDateHandler.getFirstAndLastDay(date);
 
-
         Booking booking = new Booking();
         Room room = roomService.getRoomByID(Integer.valueOf(roomId));
         booking.setUser(userService.getUserByName(userHandler.getPrincipal()));
@@ -154,7 +142,16 @@ public class AppController {
             booking.setTotalPrice(getCostServ(booking) + getTotalByCostRoom(booking.getRoom(), localDateHandler.getDaysOfPeriod(booking.getDateIn(), booking.getDateOut())));
             bookingService.saveBooking(booking);
         }
+    }
 
+    private Set<String> categories() {
+        Set<String> categories = new HashSet<>();
+        for (Room room : roomService.getAllRooms()
+        ) {
+            categories.add(room.getCategory());
+        }
+        categories.add("All");
+        return categories;
     }
 
     private Double getCostServ(Booking booking) {
@@ -181,6 +178,7 @@ public class AppController {
         bookings.addAll(bookingService.getВookedByDateIn(dateIn, dateOut));
         bookings.addAll(bookingService.getВookedByDateOut(dateIn, dateOut));
         bookings.addAll(bookingService.getВookedByDateInAndDateOut(dateIn, dateOut));
+        bookings.addAll(bookingService.getВookedByDateInAndDateOut2(dateIn, dateOut));
         Set<Room> rooms = new HashSet<>();
         for (Booking booking : bookings
         ) {

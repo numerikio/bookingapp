@@ -15,5 +15,7 @@ public interface BookingRepository extends JpaRepository<Booking, Integer> {
 
     List<Booking> findByDateInAfterAndDateOutBefore(LocalDate dateIn, LocalDate dateOut);
 
+    List<Booking> findByDateInBeforeAndDateOutAfter(LocalDate dateIn,LocalDate dateOut);
+
     List<Booking> findByUser(User user);
 }

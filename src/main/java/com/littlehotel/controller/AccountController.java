@@ -28,6 +28,7 @@ import java.util.Set;
 @Controller
 @RequestMapping("/")
 @SessionAttributes("roles")
+@Transactional
 public class AccountController {
 
     @Autowired
@@ -70,12 +71,6 @@ public class AccountController {
         if (result.hasErrors()) {
             return "registration";
         }
-
-        /*if (!userService.isUserNameUnique(user.getId(), user.getName())) {
-            FieldError ssoError = new FieldError("user", "ssoId", messageSource.getMessage("non.unique.ssoId", new String[]{user.getSsoId()}, Locale.getDefault()));
-            result.addError(ssoError);
-            return "registration";
-        }*/
         Set<UserProfile> userProfiles = new HashSet<>();
         userProfiles.add(userProfileService.findByType("USER"));
         user.setUserProfiles(userProfiles);
@@ -114,12 +109,13 @@ public class AccountController {
     }
 
     /**
-     * This method will delete an user by it's SSOID value.
+     * This method will delete an user by it's ID value.
      */
-    @RequestMapping(value = {"/delete-user-{name}"}, method = RequestMethod.GET)
-    public String deleteUser(@PathVariable String name) {
-        userService.deleteUser(userService.getUserByName(name));
-        tokenRepository.removeUserTokens(name);
+    @RequestMapping(value = {"/delete-user-{id}"}, method = RequestMethod.GET)
+    public String deleteUser(@PathVariable Integer id) {
+        User user = userService.getUserDyID(id);
+        userService.deleteUser(user.getId());
+        tokenRepository.removeUserTokens(user.getName());
         return "redirect:/userslist";
     }
 
@@ -146,11 +142,7 @@ public class AccountController {
      */
     @RequestMapping(value = "/login", method = RequestMethod.GET)
     public String loginPage() {
-      //  if (userHandler.isCurrentAuthenticationAnonymous()) {
-            return "login";
-       /* } else {
-            return "redirect:/";
-        }*/
+        return "login";
     }
 
     /**
@@ -166,9 +158,9 @@ public class AccountController {
         }
         return "redirect:/";
     }
+
     @RequestMapping(value = "/userslist", method = RequestMethod.GET)
     public String listUsers(ModelMap model) {
-
         List<User> users = userService.getAllUsers();
         model.addAttribute("users", users);
         model.addAttribute("loggedinuser", userHandler.getPrincipal());

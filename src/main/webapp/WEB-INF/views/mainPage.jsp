@@ -16,7 +16,15 @@
     <div class="container">
         <a href="<c:url value='/login' />" class="btn btn-warning custom-width">log in</a>
         <sec:authorize access="hasRole('USER')">
-        <a href="<c:url value='bookingPage' />" class="btn btn-warning custom-width">Booking Page</a>
+        <a href="<c:url value='bookingPage' />" class="btn btn-warning custom-width">Booking Page
+            <c:choose>
+               <c:when test="${coint == '0'}">
+               </c:when>
+               <c:otherwise>
+                  <span class="badge">${coint}</span>
+               </c:otherwise>
+            </c:choose>
+        </a>
         <a href="logout" class="btn btn-primary">${loggedinuser} <i class="glyphicon glyphicon-log-out"></i></a>
     </sec:authorize>
     </div>
@@ -25,14 +33,19 @@
     <form action="find">
     <div>
         <%@include file="calendar.jsp" %>
-        </div>
+    </div>
         <br>
         <c:forEach items="${categories}" var="categor">
             <input type="radio" name="categor" id="${categor}" value="${categor}">${categor}<br>
         </c:forEach>
+        <br>
+        <div>
         <button type="submit" class="btn-lg btn-primary"><i class="glyphicon glyphicon-search"></i></button>
+        </div>
+        <br>
     </form>
 </div>
+<div class="container">
     <table class="table table-hover">
         <thead>
             <tr>
@@ -50,22 +63,25 @@
                     <td>${room.description}</td>
                     <td>${room.category}</td>
                     <td>${room.cost}</td>
+                    <c:if test="${found}">
                     <td><c:choose>
                         <c:when test="${days == '0'|| empty days}">
-                            ${room.cost}
+                            <b>${room.cost}</b>
                         </c:when>
                         <c:otherwise>
-                           ${room.cost*days}
+                           <b>${room.cost*days}</b>
                         </c:otherwise>
                     </c:choose></td>
                     <sec:authorize access="hasRole('USER')">
                         <td><button type="button" class="btn btn-success" onclick="tt(${room.id})">buy now</button></td>
                     </sec:authorize>
+                    </c:if>
                 </tr>
             </c:forEach>
 
         </tbody>
     </table>
+    </div>
 
     <sec:authorize access="hasRole('ADMIN')">
         <script language="javascript" type="text/javascript">

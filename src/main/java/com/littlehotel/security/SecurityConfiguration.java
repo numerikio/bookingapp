@@ -36,13 +36,15 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.authorizeRequests().antMatchers("/getEvents","/Expenditure","/Income")
-                .access("hasRole('USER') or hasRole('ADMIN') or hasRole('ANALYST')")
-                .antMatchers("favicon.ico").permitAll()
+        http.authorizeRequests().antMatchers("/bookingRoom", "/bookingPage", "/addServ", "/servPage")
+                .access("hasRole('USER')")
+                .antMatchers("/", "/find").permitAll()
                 .antMatchers("/edit-user-*", "/delete-user-*")
                 .access("hasRole('ADMIN')")
                 .antMatchers("/userslist")
                 .access("hasRole('ADMIN')")
+                .antMatchers("/reception")
+                .access("hasRole('RECEPTION')")
                 .and()
                 .formLogin()
                 .loginPage("/login")
@@ -53,10 +55,12 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .rememberMe()
                 .rememberMeParameter("remember-me")
                 .tokenRepository(tokenService)
-                .tokenValiditySeconds(604800).and()
-                .csrf().and()
-                .exceptionHandling().accessDeniedPage("/Access_Denied");
-
+                .tokenValiditySeconds(604800)
+                .and()
+                .csrf()
+                .and()
+                .exceptionHandling()
+                .accessDeniedPage("/Access_Denied");
     }
 
     @Bean

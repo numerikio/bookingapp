@@ -42,6 +42,11 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
+    public List<Booking> getВookedByDateInAndDateOut2(LocalDate dateIn, LocalDate dateOut) {
+        return bookingRepository.findByDateInBeforeAndDateOutAfter(dateIn,dateOut);
+    }
+
+    @Override
     public List<Booking> getBookedListByUser(User user) {
         return bookingRepository.findByUser(user);
     }
